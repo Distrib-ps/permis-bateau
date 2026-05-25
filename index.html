@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Permis Bateau — Entraînement Côtier & Fluvial</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%E2%9A%93%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="anchor">⚓</span>
+    <h1>Permis Bateau — Entraînement</h1>
+  </div>
+  <nav>
+    <button class="nav-btn" data-screen="home">Accueil</button>
+    <button class="nav-btn" data-screen="stats">Progression</button>
+    <button class="nav-btn" data-screen="about">À propos</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ============================ HOME ============================ -->
+<section id="home" class="screen active">
+
+  <div class="hero">
+    <h2>Prépare ton permis bateau</h2>
+    <p class="lead">Côtier · Fluvial · Tronc commun — questions inspirées du programme officiel (arrêté du 28/02/2008, Division 240, RIPAM, RPP).</p>
+  </div>
+
+  <div class="card-grid">
+
+    <div class="card mode-card" data-mode="exam">
+      <div class="card-icon">📝</div>
+      <h3>Examen blanc</h3>
+      <p>40 questions chronométrées (1 h 30). Tolérance&nbsp;: <strong>5 erreurs max</strong> (35 / 40). Conditions officielles depuis 2022.</p>
+      <div class="permit-select">
+        <label><input type="radio" name="exam-permit" value="cotier" checked> Côtier</label>
+        <label><input type="radio" name="exam-permit" value="fluvial"> Fluvial</label>
+      </div>
+      <button class="btn btn-primary" data-action="start-exam">Lancer l'examen</button>
+    </div>
+
+    <div class="card mode-card" data-mode="theme">
+      <div class="card-icon">🎯</div>
+      <h3>Révision par thème</h3>
+      <p>Cible un thème précis pour travailler tes faiblesses. 10 à 50 questions au choix.</p>
+      <select id="theme-select"></select>
+      <div class="permit-select">
+        <label>Nombre :
+          <select id="theme-count">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn btn-primary" data-action="start-theme">Commencer</button>
+    </div>
+
+    <div class="card mode-card" data-mode="learn">
+      <div class="card-icon">📚</div>
+      <h3>Mode apprentissage</h3>
+      <p>Explication détaillée après chaque question, à ton rythme. Idéal pour démarrer.</p>
+      <div class="permit-select">
+        <label><input type="radio" name="learn-permit" value="cotier" checked> Côtier</label>
+        <label><input type="radio" name="learn-permit" value="fluvial"> Fluvial</label>
+        <label><input type="radio" name="learn-permit" value="tronc-commun"> Tronc commun</label>
+      </div>
+      <button class="btn btn-primary" data-action="start-learn">Commencer</button>
+    </div>
+
+    <div class="card mode-card" data-mode="review">
+      <div class="card-icon">🔁</div>
+      <h3>Mes erreurs</h3>
+      <p>Revois les questions que tu as ratées. Système de répétition espacée intégré.</p>
+      <p class="muted" id="review-count-info">—</p>
+      <button class="btn btn-primary" data-action="start-review">Réviser mes erreurs</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================ QUIZ ============================ -->
+<section id="quiz" class="screen">
+
+  <div class="quiz-header">
+    <div class="quiz-progress">
+      <span id="quiz-progress-text">Question 1 / 30</span>
+      <div class="progress-bar"><div id="quiz-progress-fill"></div></div>
+    </div>
+    <div class="quiz-meta">
+      <span id="quiz-theme-tag" class="tag"></span>
+      <span id="quiz-timer" class="timer hidden">⏱ 75:00</span>
+      <button class="btn btn-ghost" data-action="quit-quiz">Quitter</button>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-number" id="quiz-question-number"></div>
+    <h2 id="quiz-question"></h2>
+    <ul id="quiz-choices" class="choices"></ul>
+    <div id="quiz-feedback" class="feedback hidden"></div>
+    <div class="quiz-actions">
+      <button id="quiz-validate" class="btn btn-primary" data-action="validate-answer">Valider</button>
+      <button id="quiz-next" class="btn btn-primary hidden" data-action="next-question">Question suivante →</button>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================ RESULTS ============================ -->
+<section id="results" class="screen">
+  <div class="results-card">
+    <div id="results-medal" class="medal"></div>
+    <h2 id="results-title"></h2>
+    <p id="results-subtitle" class="lead"></p>
+
+    <div class="score-big">
+      <span id="results-score-num"></span>
+      <span class="score-total">/ <span id="results-score-total"></span></span>
+    </div>
+
+    <div id="results-breakdown" class="breakdown"></div>
+
+    <div class="results-actions">
+      <button class="btn btn-primary" data-action="restart-same">Recommencer</button>
+      <button class="btn btn-ghost" data-action="go-home">Retour à l'accueil</button>
+      <button class="btn btn-ghost" data-action="review-mistakes" id="review-mistakes-btn">Revoir mes erreurs</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ STATS ============================ -->
+<section id="stats" class="screen">
+  <h2>Ma progression</h2>
+
+  <div class="stats-summary">
+    <div class="stat-tile">
+      <div class="stat-num" id="stat-total-q">0</div>
+      <div class="stat-label">Questions répondues</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-num" id="stat-accuracy">—</div>
+      <div class="stat-label">Taux de réussite global</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-num" id="stat-exams">0</div>
+      <div class="stat-label">Examens blancs passés</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-num" id="stat-best">—</div>
+      <div class="stat-label">Meilleur score examen</div>
+    </div>
+  </div>
+
+  <h3>Performance par thème</h3>
+  <div id="stat-by-theme" class="theme-stats"></div>
+
+  <h3>Historique des examens blancs</h3>
+  <table class="exam-history">
+    <thead><tr><th>Date</th><th>Permis</th><th>Score</th><th>Résultat</th></tr></thead>
+    <tbody id="stat-exam-history"></tbody>
+  </table>
+
+  <div class="danger-zone">
+    <button class="btn btn-danger" data-action="reset-stats">Réinitialiser ma progression</button>
+  </div>
+</section>
+
+<!-- ============================ ABOUT ============================ -->
+<section id="about" class="screen">
+  <h2>À propos</h2>
+  <p>Cette application est un outil d'entraînement personnel au <strong>permis plaisance Option Côtière et Option Eaux Intérieures</strong>.</p>
+
+  <h3>Format officiel</h3>
+  <ul>
+    <li><strong>Option Côtière</strong> : QCM de 40 questions, durée ~1 h 30, <strong>5 erreurs admises maximum</strong> (donc 35/40 pour réussir).</li>
+    <li><strong>Option Eaux Intérieures (Fluvial)</strong> : QCM de 40 questions, mêmes conditions.</li>
+    <li>Format officiel depuis l'arrêté du 22 avril 2022. Une seule réponse exacte par question.</li>
+    <li>S'ajoute une <strong>formation pratique</strong> de 3 h 30 minimum, validée par un bateau-école agréé.</li>
+  </ul>
+
+  <h3>Sources</h3>
+  <ul>
+    <li>Arrêté du 28 février 2008 relatif au permis plaisance</li>
+    <li>Division 240 (arrêté du 11 mars 2008) — équipements de sécurité</li>
+    <li>RIPAM (Règlement International pour Prévenir les Abordages en Mer)</li>
+    <li>RPP (Règlement Particulier de Police de la navigation intérieure)</li>
+    <li>SHOM — balisage et cartes marines</li>
+  </ul>
+
+  <h3>Important</h3>
+  <p class="muted">Les questions ici sont inspirées du programme officiel pour t'aider à apprendre. Pour le passage de l'examen, présente-toi auprès d'un bateau-école agréé.</p>
+</section>
+
+</main>
+
+<footer>
+  <p>⚓ Bon vent et bonne mer.</p>
+</footer>
+
+<script src="data/questions.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
